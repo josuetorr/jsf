@@ -2,7 +2,7 @@
 
 ## Credit
 
-This is not an original idea. The main idea was taking from _Tsoding Daily_ [https://www.youtube.com/@TsodingDaily]
+This is not an original idea. The main idea was taking from [Tsoding Daily](https://www.youtube.com/@TsodingDaily)
 
 ## Summary
 
@@ -15,5 +15,5 @@ is what allows us to compose our nodes.
 
 # References
 
-Grecha.js Video - [https://www.youtube.com/watch?v=bAn5YmPmtXI&t=2706s]
-Grecha.js Github Repo - [https://github.com/tsoding/grecha.js]
+- Grecha.js Video - [https://www.youtube.com/watch?v=bAn5YmPmtXI&t=2706s](https://www.youtube.com/watch?v=bAn5YmPmtXI&t=2706s)
+- Grecha.js Github Repo - [https://github.com/tsoding/grecha.js](https://github.com/tsoding/grecha.js)

@@ -53,7 +53,7 @@ export function tag(name: TTag, ...children: TChildren) {
   };
 
   t.tshow = (show = true) => {
-    t.tatt(tshow)(show ? ttrue : tfalse);
+    setshow(show);
     beat();
     return t;
   };

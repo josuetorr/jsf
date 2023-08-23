@@ -4,7 +4,8 @@ export type TEventName = keyof HTMLElementEventMap;
 export type TTag = keyof HTMLElementTagNameMap;
 export type THandler = (e: HTMLElementEventMap[TEventName]) => void;
 export type TOptions = EventListenerOptions | boolean;
-export type TChildren = Array<TNode | string>;
+export type TChild = TNode | string;
+export type TChildren = Array<TChild>;
 
 export type TOnclickHandler = (callback: THandler) => (opts: TOptions) => TNode;
 export type TAttHandler = (att: string) => (value: string) => TNode;
@@ -20,24 +21,23 @@ export interface TNode extends HTMLElement {
 // syntax
 const tshow = 't:show';
 const ttrue = 'true';
-const ttfalse = 'false';
-
-let started = false;
+const tfalse = 'false';
 
 // building blocks
 export function tag(name: TTag, ...children: TChildren) {
   const t = document.createElement(name) as TNode;
 
-  /* sort of a lifecycle hook
-   * runs each time a function call is made
-   * */
-  const beat = (show: boolean) => {
-    if (!show) return t;
+  const isshowing = (c: TChild) =>
+    typeof c === 'string' ? true : c.getAttribute(tshow) == ttrue;
 
-    for (const c of children) {
-      if (typeof c === 'string') t.appendChild(document.createTextNode(c));
-      else t.appendChild(c);
-    }
+  const setshow = (show: boolean) => t.tatt(tshow)(show ? ttrue : tfalse);
+
+  const appendchild = (c: TChild) =>
+    t.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+
+  const beat = () => {
+    const toShow = children.filter(isshowing);
+    return toShow.map(appendchild);
   };
 
   t.tonclick =
@@ -53,15 +53,17 @@ export function tag(name: TTag, ...children: TChildren) {
   };
 
   t.tshow = (show = true) => {
-    t.tatt(tshow)(show ? ttrue : ttfalse);
-    beat(show);
+    t.tatt(tshow)(show ? ttrue : tfalse);
+    beat();
     return t;
   };
 
   /**
-   * TODO: figure out how to handle the lifecyle hooks*
+   * This will act as some sort of lifecyle.
+   * TODO: Must think it through
    */
-  beat(true);
+  beat();
+  setshow(true);
 
   return t;
 }
@@ -88,5 +90,5 @@ const tab = (text: string, show = false, ...children: TChildren) => {
 };
 
 const root = div;
-const app = root(tab('!', true), tab('!'), tab('#'));
-document.querySelector('#app')?.appendChild(app);
+const app = root(tab('!', true).tatt('bob')('pop'), tab('@'), tab('#'));
+document.querySelector('#app')?.append(app);

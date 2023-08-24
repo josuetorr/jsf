@@ -1,33 +1,27 @@
-import { TChildren, THandler, TNode } from './types';
+import { TChild, TChildren, THandler, TNode } from './types';
 import { h1, div, p, button } from './core/ui/components';
 
-const LOREM =
-  'Lorem voluptates consectetur vel fugit deleniti! Nemo explicabo molestias consectetur fugit dolor tenetur laboriosam Mollitia labore iste odit architecto quo Exercitationem assumenda sint ipsa consectetur commodi Qui labore eaque explicabo.';
+const tabswitcher = (tabs: { [key: string]: TNode }) => {
+  const names = Object.keys(tabs);
+  const tbs = names.map((n) => tabs[n]);
 
-// building blocks
+  let current = 0;
+  const tab = div(tbs[current]);
 
-// custom components
-// const mmx_image = () =>
-//   img('../public/mmx.webp').tatt('width')('50px').tatt('height')('uto');
-
-const lorem = () => p(LOREM);
-
-export const tabswitcher = (...children: TChildren) => {
-  const tabs = children.map((c, i) => {
-    let selected = 0;
-    const header = div;
-    const body = div(c).tshow(selected === i);
-
-    return div(header(button(`${i}`).tonclick(() => (selected = i))()), body);
-  });
-
-  return div(...tabs);
-};
-
-const tab = (text: string, ...children: TChildren) => {
-  return div(h1(text), lorem(), ...children);
+  return div(
+    ...names.map((name, index) =>
+      button(name).tonclick(() => {
+        tab.removeChild(tbs[current]);
+        tab.appendChild(tbs[index]);
+        current = index;
+      })(),
+    ),
+    tab,
+  );
 };
 
 const root = div;
-const app = root(tabswitcher(tab('!'), tab('@'), tab('#')));
+const app = root(
+  tabswitcher({ bob: div('bob'), jim: div('jim'), pol: div('pol') }),
+);
 document.querySelector('#app')?.append(app);

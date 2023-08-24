@@ -1,13 +1,7 @@
 import { TTag, TChildren, TChild, TNode, THandler, TOptions } from '../types';
-import { tshow, ttrue, tfalse } from '../syntax';
 
 export function tag(name: TTag, ...children: TChildren) {
   const t = document.createElement(name) as TNode;
-
-  const isshowing = (c: TChild) =>
-    typeof c === 'string' ? true : c.getAttribute(tshow) == ttrue;
-
-  const setshow = (show: boolean) => t.tatt(tshow)(show ? ttrue : tfalse);
 
   const appendchild = (c: TChild) => {
     if (typeof c === 'string') t.textContent = c;
@@ -17,8 +11,7 @@ export function tag(name: TTag, ...children: TChildren) {
   };
 
   const beat = () => {
-    const toShow = children.filter(isshowing);
-    return toShow.map(appendchild);
+    return children.map(appendchild);
   };
 
   t.tonclick = function (handler: THandler) {
@@ -44,18 +37,11 @@ export function tag(name: TTag, ...children: TChildren) {
     return t;
   };
 
-  t.tshow = (show = true) => {
-    setshow(show);
-    beat();
-    return t;
-  };
-
   /**
    * This will act as some sort of lifecyle.
    * TODO: Must think it through
    */
   beat();
-  setshow(true);
 
   return t;
 }

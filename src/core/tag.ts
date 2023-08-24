@@ -9,20 +9,35 @@ export function tag(name: TTag, ...children: TChildren) {
 
   const setshow = (show: boolean) => t.tatt(tshow)(show ? ttrue : tfalse);
 
-  const appendchild = (c: TChild) =>
-    t.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  const appendchild = (c: TChild) => {
+    if (typeof c === 'string') t.textContent = c;
+    else t.appendChild(c);
+
+    return t;
+  };
 
   const beat = () => {
     const toShow = children.filter(isshowing);
     return toShow.map(appendchild);
   };
 
-  t.tonclick =
-    (handler: THandler) =>
-    (opts: TOptions = false) => {
-      t.addEventListener('click', handler, opts);
+  t.tonclick = function (handler: THandler) {
+    return (opts: TOptions = false) => {
+      /**
+       * TODO: need to find a way to remove all previous event handler's
+       *  Maybe have some sort of destructor fn
+       */
+      t.addEventListener(
+        'click',
+        (...args) => {
+          handler(...args, t);
+          beat();
+        },
+        opts,
+      );
       return t;
     };
+  };
 
   t.tatt = (att: string) => (value: string) => {
     t.setAttribute(att, value);

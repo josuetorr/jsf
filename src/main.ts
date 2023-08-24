@@ -1,5 +1,5 @@
-import { TChildren } from './types';
-import { h1, div, p } from './core/ui/components';
+import { TChildren, THandler, TNode } from './types';
+import { h1, div, p, button } from './core/ui/components';
 
 const LOREM =
   'Lorem voluptates consectetur vel fugit deleniti! Nemo explicabo molestias consectetur fugit dolor tenetur laboriosam Mollitia labore iste odit architecto quo Exercitationem assumenda sint ipsa consectetur commodi Qui labore eaque explicabo.';
@@ -12,10 +12,22 @@ const LOREM =
 
 const lorem = () => p(LOREM);
 
-const tab = (text: string, show = false, ...children: TChildren) => {
-  return div(h1(text), lorem(), ...children).tshow(show);
+export const tabswitcher = (...children: TChildren) => {
+  const tabs = children.map((c, i) => {
+    let selected = 0;
+    const header = div;
+    const body = div(c).tshow(selected === i);
+
+    return div(header(button(`${i}`).tonclick(() => (selected = i))()), body);
+  });
+
+  return div(...tabs);
+};
+
+const tab = (text: string, ...children: TChildren) => {
+  return div(h1(text), lorem(), ...children);
 };
 
 const root = div;
-const app = root(tab('!', true).tatt('bob')('pop'), tab('@'), tab('#'));
+const app = root(tabswitcher(tab('!'), tab('@'), tab('#')));
 document.querySelector('#app')?.append(app);
